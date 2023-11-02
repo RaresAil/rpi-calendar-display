@@ -1,4 +1,7 @@
 import React from "react";
+import "./weather.css";
+
+const Icons = require("@intern0t/react-weather-icons");
 
 const mock = {
   latitude: 47.1875,
@@ -67,6 +70,8 @@ const mock = {
 };
 
 export class Weather extends React.PureComponent<{}, State> {
+  private readonly UNIT_TEMP = "°C";
+
   private hInterval: NodeJS.Timeout | undefined;
   private dInterval: NodeJS.Timeout | undefined;
 
@@ -104,8 +109,43 @@ export class Weather extends React.PureComponent<{}, State> {
   }
 
   render(): React.ReactNode {
-    console.log(this.getHourlyData(this.state.currentTimeS));
-    return <></>;
+    const current = this.getHourlyData(this.state.currentTimeS);
+    const CurrentIcon = this.getIcon(current.weathercode);
+    return (
+      <div className="weather">
+        <div className="c-weather">
+          <span>
+            {current.temperature} {this.UNIT_TEMP}
+          </span>
+          <CurrentIcon color="#fff" size={60} />
+        </div>
+        <div className="del-weather" />
+        <div className="d-weather">
+          {this.state.daily.map((daily) => {
+            const DailyIcon = this.getIcon(daily.max.weathercode);
+            const weekDay = daily.date.toLocaleDateString("default", {
+              weekday: "short",
+            });
+            const isToday =
+              weekDay ===
+              new Date().toLocaleDateString("default", {
+                weekday: "short",
+              });
+
+            return (
+              <div key={daily.date.getTime()}>
+                <span>{isToday ? "Today" : weekDay}</span>
+                <DailyIcon color="#fff" size={40} />
+                <span>
+                  {daily.max.temperature} {this.UNIT_TEMP}{" "}
+                  {daily.min.temperature} {this.UNIT_TEMP}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
   }
 
   private parseData = (data: any) => {
@@ -230,6 +270,67 @@ export class Weather extends React.PureComponent<{}, State> {
     this.setState({
       currentTimeS: this.getHourlyKey(new Date()),
     });
+  };
+
+  private getIcon = (code: number): any => {
+    if (code >= 20 && code <= 29) {
+      return Icons.Showers;
+    }
+
+    if (code >= 36 && code <= 39) {
+      return Icons.NightSleet;
+    }
+
+    if ((code >= 40 && code <= 49) || (code >= 4 && code <= 19)) {
+      return Icons.Fog;
+    }
+
+    if (code >= 50 && code <= 59) {
+      return Icons.Raindrops;
+    }
+
+    if ((code >= 70 && code <= 75) || (code >= 77 && code <= 79)) {
+      return Icons.SnowflakeCold;
+    }
+
+    if (code === 76) {
+      return Icons.Dust;
+    }
+
+    if (
+      (code >= 60 && code <= 67) ||
+      (code >= 80 && code <= 83) ||
+      code === 91 ||
+      code === 92
+    ) {
+      return Icons.Rain;
+    }
+
+    if (code === 84 || code === 68 || code === 69) {
+      return Icons.RainMix;
+    }
+
+    if (code >= 85 && code <= 90) {
+      return Icons.SnowWind;
+    }
+
+    if (code === 93 || code === 94 || code === 99 || code === 96) {
+      return Icons.Hail;
+    }
+
+    if (code === 95) {
+      return Icons.Thunderstorm;
+    }
+
+    if (code === 97) {
+      return Icons.NightSnowThunderstorm;
+    }
+
+    if (code === 98 || (code >= 30 && code <= 35)) {
+      return Icons.Sandstorm;
+    }
+
+    return Icons.DaySunny;
   };
 }
 

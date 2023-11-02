@@ -6,34 +6,6 @@
   bottom: 0;
   z-index: -1;
   opacity: 0.4;
-}
-
-.bg1 {
-  background: url("../images/bg1.jpg") no-repeat center;
-  background-size: cover;
-}
-
-.bg2 {
-  background: url("../images/bg2.jpg") no-repeat center;
-  background-size: cover;
-}
-
-.bg3 {
-  background: url("../images/bg3.jpg") no-repeat center;
-  background-size: cover;
-}
-
-.bg4 {
-  background: url("../images/bg4.jpg") no-repeat center;
-  background-size: cover;
-}
-
-.bg5 {
-  background: url("../images/bg5.jpg") no-repeat center;
-  background-size: cover;
-}
-
-.bg6 {
-  background: url("../images/bg6.jpg") no-repeat center;
+  background: url("../images/bg.jpg") no-repeat center;
   background-size: cover;
 }

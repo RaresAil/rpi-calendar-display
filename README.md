@@ -1,1 +1,1 @@
-# rpi-calendar-display
+# Raspberry Pi Display with Reclaim AI

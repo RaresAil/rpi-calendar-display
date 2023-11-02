@@ -2,43 +2,13 @@ import React from "react";
 import "./calendar.css";
 
 export class Calendar extends React.PureComponent<{}, State> {
+  private readonly BASE_URL = "http://127.0.0.1:8089";
   private readonly CALENDAR_UPDATE_INTERVAL = 60 * 1000;
 
   private interval: NodeJS.Timeout | undefined;
 
   state: State = {
-    events: [
-      {
-        key: "1097767/e9im6r31d5miqobjedkn6t1dcdqn6t3fdkmm8ob9dhsjkthi78ojac1i6coj8ehi60p36b9h64mj0chqc5kmoqbecdgmisj1e9in6ca0ctmm2qbc5phmur9q8h0kij2pbt442gi9ag",
-        title: "🆓 📧 Morning Catch Up",
-        eventStart: "2023-11-02T09:00:00.000+02:00",
-        eventEnd: "2023-11-02T09:30:00.000+02:00",
-        requiresTravel: false,
-        rsvpStatus: RsvpStatus.None,
-        organizer: "ailincairares1@gmail.com",
-        onlineMeetingUrl: "",
-      },
-      {
-        key: "1097769/e9im6r31d5miqobjedkn6t1dcdqn6t3fdkmm8ob9dhsjkthi78ojac1i6coj8ehi60p36b9h64mj0chqc5kmoqbecdgmisj1e9in6ca0ctmm2qbc5phmur9q8h0kij2pbt442gi9ag",
-        title: "🆓 📧 Morning Catch Up",
-        eventStart: "2023-11-02T09:00:00.000+02:00",
-        eventEnd: "2023-11-02T09:30:00.000+02:00",
-        requiresTravel: false,
-        rsvpStatus: RsvpStatus.None,
-        organizer: "ailincairares1@gmail.com",
-        onlineMeetingUrl: "",
-      },
-      {
-        key: "2197769/e9im6r31d5miqobjedkn6t1dcdqn6t3fdkmm8ob9dhsjkthi78ojac1i6coj8ehi60p36b9h64mj0chqc5kmoqbecdgmisj1e9in6ca0ctmm2qbc5phmur9q8h0kij2pbt442gi9ag",
-        title: "🆓 📧 Morning Catch Up",
-        eventStart: "2023-11-03T09:00:00.000+02:00",
-        eventEnd: "2023-11-03T09:30:00.000+02:00",
-        requiresTravel: false,
-        rsvpStatus: RsvpStatus.None,
-        organizer: "ailincairares1@gmail.com",
-        onlineMeetingUrl: "",
-      },
-    ],
+    events: [],
   };
 
   async componentDidMount(): Promise<void> {
@@ -112,7 +82,13 @@ export class Calendar extends React.PureComponent<{}, State> {
     };
   };
 
-  private updateCalendar = async (): Promise<void> => {};
+  private updateCalendar = async (): Promise<void> => {
+    const result = await fetch(`${this.BASE_URL}/events`);
+    const data = await result.json();
+    this.setState({
+      events: data,
+    });
+  };
 }
 
 interface State {

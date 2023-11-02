@@ -21,7 +21,7 @@
 .event {
   display: flex;
   align-items: center;
-  background-color: rgba(255, 79, 89, 0.3);
+  background-color: rgba(0, 0, 0, 0.3);
   padding: 10px 10px 10px 12px;
   position: relative;
   overflow: hidden;
@@ -31,7 +31,7 @@
 }
 
 .event span:nth-child(1) {
-  background: rgb(255, 79, 89);
+  background: rgb(255, 255, 255);
   width: 6px;
   position: absolute;
   left: 0;
@@ -60,4 +60,20 @@
 
 .event-title-date:first-of-type {
   margin-top: 0;
+}
+
+.event span:nth-child(3) {
+  font-weight: 500;
+}
+
+.event.Accepted span:nth-child(1) {
+  background: #2ecc71;
+}
+
+.event.Declined span:nth-child(1) {
+  background: #e74c3c;
+}
+
+.event.Maybe span:nth-child(1) {
+  background: #e67e22;
 }

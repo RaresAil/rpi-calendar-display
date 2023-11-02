@@ -39,7 +39,7 @@ export class Calendar extends React.PureComponent<{}, State> {
           return (
             <React.Fragment key={event.key}>
               {addTitle ? <TitleNode /> : <></>}
-              <div className="event">
+              <div className={`event ${event.rsvpStatus}`}>
                 <span />
                 <span>
                   {eventStart.getHours().toString().padStart(2, "0")}:
@@ -99,6 +99,7 @@ enum RsvpStatus {
   None = "None",
   Accepted = "Accepted",
   Declined = "Declined",
+  Maybe = "Maybe",
 }
 
 interface Event {

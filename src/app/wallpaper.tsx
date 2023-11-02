@@ -29,20 +29,6 @@ export class Wallpaper extends React.PureComponent<{}, { w: number }> {
   }
 
   render(): React.ReactNode {
-    return (
-      <div className="wallpapers">
-        {Array.from(Array(this.numWallpapers).keys()).map((i) => {
-          const n = i + 1;
-          return (
-            <div
-              key={n}
-              className={`wallpaper bg${n} ${
-                this.state.w === n ? "active" : ""
-              }`}
-            />
-          );
-        })}
-      </div>
-    );
+    return <div className={`wallpaper bg${this.state.w}`} />;
   }
 }

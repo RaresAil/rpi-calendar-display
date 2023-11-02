@@ -6,6 +6,7 @@ export class Calendar extends React.PureComponent<{}, State> {
   private readonly CALENDAR_UPDATE_INTERVAL = 60 * 1000;
 
   private interval: NodeJS.Timeout | undefined;
+  private updating = false;
 
   state: State = {
     events: [],
@@ -83,11 +84,17 @@ export class Calendar extends React.PureComponent<{}, State> {
   };
 
   private updateCalendar = async (): Promise<void> => {
+    if (this.updating) {
+      return;
+    }
+    this.updating = true;
+
     const result = await fetch(`${this.BASE_URL}/events`);
     const data = await result.json();
     this.setState({
       events: data,
     });
+    this.updating = false;
   };
 }
 

@@ -10,7 +10,7 @@ export class Time extends React.PureComponent<{}, State> {
 
   componentDidMount(): void {
     this.updateTime();
-    this.interval = setInterval(this.updateTime, 1000);
+    this.interval = setInterval(this.updateTime, 500);
   }
 
   componentWillUnmount(): void {

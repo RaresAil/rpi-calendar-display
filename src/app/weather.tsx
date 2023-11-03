@@ -1,13 +1,17 @@
+import { Cron, parseCronExpression } from "cron-schedule";
 import React from "react";
+
 import "./weather.css";
 
 const Icons = require("@intern0t/react-weather-icons");
 
 export class Weather extends React.PureComponent<{}, State> {
+  private readonly HOUR_CRON = parseCronExpression("0 * * * *");
+  private readonly DAY_CRON = parseCronExpression("0 0 * * *");
   private readonly UNIT_TEMP = "°C";
 
-  private hInterval: NodeJS.Timeout | undefined;
-  private dInterval: NodeJS.Timeout | undefined;
+  private hTimeout: NodeJS.Timeout | undefined;
+  private dTimeout: NodeJS.Timeout | undefined;
 
   state: State = {
     currentTimeS: "",
@@ -26,19 +30,28 @@ export class Weather extends React.PureComponent<{}, State> {
     });
 
     await this.loadWeatherData();
-    this.dInterval = setInterval(this.loadWeatherData, 86400000);
-    this.hInterval = setInterval(this.updateHourlyData, 3600000);
+
+    this.dTimeout = await this.processTimeout(
+      0,
+      this.DAY_CRON,
+      this.loadWeatherData
+    );
+    this.hTimeout = await this.processTimeout(
+      0,
+      this.HOUR_CRON,
+      this.updateHourlyData
+    );
   }
 
   componentWillUnmount(): void {
-    if (this.hInterval) {
-      clearInterval(this.hInterval);
-      this.hInterval = undefined;
+    if (this.hTimeout) {
+      clearInterval(this.hTimeout);
+      this.hTimeout = undefined;
     }
 
-    if (this.dInterval) {
-      clearInterval(this.dInterval);
-      this.dInterval = undefined;
+    if (this.dTimeout) {
+      clearInterval(this.dTimeout);
+      this.dTimeout = undefined;
     }
   }
 
@@ -273,6 +286,21 @@ export class Weather extends React.PureComponent<{}, State> {
     }
 
     return Icons.DaySunny;
+  };
+
+  private processTimeout = async (
+    timeout: number = 0,
+    cron: Cron,
+    method: () => Promise<void>
+  ) => {
+    if (timeout > 120 * 1000) {
+      await method();
+    }
+
+    const nextTimeout = cron.getNextDate().getTime() - Date.now();
+    return setTimeout(() => {
+      this.processTimeout(nextTimeout, cron, method);
+    }, nextTimeout);
   };
 }
 

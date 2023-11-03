@@ -1,11 +1,13 @@
+import { parseCronExpression } from "cron-schedule";
 import React from "react";
+
 import "./calendar.css";
 
 export class Calendar extends React.PureComponent<{}, State> {
+  private readonly CRON = parseCronExpression("* * * * *");
   private readonly BASE_URL = "http://127.0.0.1:8089";
-  private readonly CALENDAR_UPDATE_INTERVAL = 60 * 1000;
 
-  private interval: NodeJS.Timeout | undefined;
+  private nodeTimeout: NodeJS.Timeout | undefined;
   private updating = false;
 
   state: State = {
@@ -14,16 +16,13 @@ export class Calendar extends React.PureComponent<{}, State> {
 
   async componentDidMount(): Promise<void> {
     await this.updateCalendar();
-    this.interval = setInterval(
-      this.updateCalendar,
-      this.CALENDAR_UPDATE_INTERVAL
-    );
+    this.processTimeout();
   }
 
   componentWillUnmount(): void {
-    if (this.interval) {
-      clearInterval(this.interval);
-      this.interval = undefined;
+    if (this.nodeTimeout) {
+      clearTimeout(this.nodeTimeout);
+      this.nodeTimeout = undefined;
     }
   }
 
@@ -54,6 +53,17 @@ export class Calendar extends React.PureComponent<{}, State> {
       </div>
     );
   }
+
+  private processTimeout = async (timeout: number = 0) => {
+    if (timeout > 30 * 1000) {
+      await this.updateCalendar();
+    }
+
+    const nextTimeout = this.CRON.getNextDate().getTime() - Date.now();
+    this.nodeTimeout = setTimeout(() => {
+      this.processTimeout(nextTimeout);
+    }, nextTimeout);
+  };
 
   private dateToLocale = (date: Date) => {
     const weekDay = date.toLocaleString("default", {

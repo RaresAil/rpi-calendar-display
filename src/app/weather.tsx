@@ -70,12 +70,12 @@ export class Weather extends React.PureComponent<{}, State> {
         <div className="d-weather">
           {this.state.daily.map((daily) => {
             const DailyIcon = this.getIcon(daily.max.weathercode);
-            const weekDay = daily.date.toLocaleDateString("default", {
+            const weekDay = daily.date.toLocaleDateString("en-GB", {
               weekday: "short",
             });
             const isToday =
               weekDay ===
-              new Date().toLocaleDateString("default", {
+              new Date().toLocaleDateString("en-GB", {
                 weekday: "short",
               });
 
@@ -105,7 +105,7 @@ export class Weather extends React.PureComponent<{}, State> {
     const hourlyData: Record<string, WeatherData> = {};
     const dailyData: Record<string, Daily> = data.hourly.time.reduce(
       (acc: Record<string, Daily>, timeS: any, i: number) => {
-        const time = new Date(timeS * 1000).toLocaleString("default", {
+        const time = new Date(timeS * 1000).toLocaleString("en-GB", {
           month: "long",
           day: "2-digit",
           year: "numeric",
@@ -184,7 +184,7 @@ export class Weather extends React.PureComponent<{}, State> {
   };
 
   private getHourlyKey = (date: Date): string => {
-    return date.toLocaleString("default", {
+    return date.toLocaleString("en-GB", {
       month: "long",
       day: "2-digit",
       year: "numeric",

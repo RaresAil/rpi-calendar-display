@@ -23,7 +23,7 @@ export class Time extends React.PureComponent<{}, State> {
   render(): React.ReactNode {
     return (
       <div className="time">
-        {this.state.currentTime.toLocaleTimeString("default", {
+        {this.state.currentTime.toLocaleTimeString("en-GB", {
           hour: "2-digit",
           minute: "2-digit",
         })}

@@ -11,7 +11,7 @@ app.use(cors("*"));
 app.get("/events", async (req, res) => {
   const start = new Date().toISOString().split("T")[0];
   let end = new Date();
-  end.setDate(end.getDate() + 2);
+  end.setDate(end.getDate() + 3);
   end = end.toISOString().split("T")[0];
 
   const query = new URLSearchParams({

@@ -112,16 +112,19 @@ export class Calendar extends React.PureComponent<{}, State> {
     }
     this.updating = true;
 
-    const result = await fetch(`${this.BASE_URL}/events`);
-    const data = await result.json();
+    try {
+      const result = await fetch(`${this.BASE_URL}/events`);
+      const data = await result.json();
 
-    if (this.state.events.length !== data.length) {
-      this.resetDimTimeout();
-    }
+      if (this.state.events.length !== data.length) {
+        this.resetDimTimeout();
+      }
 
-    this.setState({
-      events: data,
-    });
+      this.setState({
+        events: data,
+      });
+    } catch {}
+
     this.updating = false;
   };
 

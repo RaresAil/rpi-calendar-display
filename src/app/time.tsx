@@ -1,7 +1,7 @@
 import React from "react";
 import "./time.css";
 
-export class Time extends React.PureComponent<{}, State> {
+export class Time extends React.PureComponent<Props, State> {
   private interval: NodeJS.Timeout | undefined;
 
   state: State = {
@@ -22,7 +22,7 @@ export class Time extends React.PureComponent<{}, State> {
 
   render(): React.ReactNode {
     return (
-      <div className="time">
+      <div className={["time", this.props.dim ? "t-dim" : ""].join(" ")}>
         {this.state.currentTime.toLocaleTimeString("en-GB", {
           hour: "2-digit",
           minute: "2-digit",
@@ -40,4 +40,8 @@ export class Time extends React.PureComponent<{}, State> {
 
 interface State {
   currentTime: Date;
+}
+
+interface Props {
+  dim: boolean;
 }

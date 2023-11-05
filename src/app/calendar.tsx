@@ -3,24 +3,20 @@ import React from "react";
 
 import "./calendar.css";
 
-export class Calendar extends React.PureComponent<{}, State> {
-  private readonly DIM_TIMEOUT = 1000 * 60 * 5;
+export class Calendar extends React.PureComponent<Props, State> {
   private readonly CRON = parseCronExpression("* * * * *");
   private readonly BASE_URL = "http://127.0.0.1:8089";
 
   private nodeTimeout: NodeJS.Timeout | undefined;
-  private dimTimeout: NodeJS.Timeout | undefined;
   private updating = false;
 
   state: State = {
     events: [],
-    dim: false,
   };
 
   async componentDidMount(): Promise<void> {
     await this.updateCalendar();
     this.processTimeout();
-    this.resetDimTimeout();
   }
 
   componentWillUnmount(): void {
@@ -28,21 +24,12 @@ export class Calendar extends React.PureComponent<{}, State> {
       clearTimeout(this.nodeTimeout);
       this.nodeTimeout = undefined;
     }
-
-    if (this.dimTimeout) {
-      clearTimeout(this.dimTimeout);
-      this.dimTimeout = undefined;
-    }
   }
 
   render() {
     let currentTitleHash = "";
     return (
       <div className="calendar">
-        <div
-          onClick={this.onDimClick}
-          className={["dim", this.state.dim ? "on" : "off"].join(" ")}
-        ></div>
         {this.state.events.map((event) => {
           const eventStart = new Date(event.eventStart);
           const { hash, node: TitleNode } = this.dateToLocale(eventStart);
@@ -117,7 +104,7 @@ export class Calendar extends React.PureComponent<{}, State> {
       const data = await result.json();
 
       if (this.state.events.length !== data.length) {
-        this.resetDimTimeout();
+        this.props.resetDimTimeout();
       }
 
       this.setState({
@@ -127,32 +114,14 @@ export class Calendar extends React.PureComponent<{}, State> {
 
     this.updating = false;
   };
-
-  private resetDimTimeout = () => {
-    if (this.dimTimeout) {
-      clearTimeout(this.dimTimeout);
-    }
-
-    this.setState({
-      dim: false,
-    });
-
-    this.dimTimeout = setTimeout(() => {
-      this.setState({
-        dim: true,
-      });
-    }, this.DIM_TIMEOUT);
-  };
-
-  private onDimClick = () => {
-    console.log("dim click");
-    this.resetDimTimeout();
-  };
 }
 
 interface State {
-  dim: boolean;
   events: Event[];
+}
+
+interface Props {
+  resetDimTimeout: () => void;
 }
 
 enum RsvpStatus {

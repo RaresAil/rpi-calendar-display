@@ -51,6 +51,12 @@ export class App extends React.PureComponent<{}, State> {
     });
 
     this.dimTimeout = setTimeout(() => {
+      const hour = new Date().getHours();
+      if (hour >= 9 && hour < 18) {
+        this.resetDimTimeout();
+        return;
+      }
+
       this.setState({
         dim: true,
       });
